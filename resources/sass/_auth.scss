@@ -1,0 +1,62 @@
+
+.auth-screen {
+  height:100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: $body-bg;
+
+  form{
+    padding-top: 10px;
+    font-size: 14px;
+    margin-top: 30px;
+  }
+
+  .card-title{ font-weight:300; }
+
+  .btn{
+    font-size: 14px;
+    margin-top:20px;
+      width: 18rem;
+      height: 3rem;
+  }
+
+  .form-control {
+    border: 1px solid #a7a1a1;
+    background-color: $white;
+  }
+
+  .one-line{
+    display: flex;
+  }
+
+  .sign-up-title{
+    text-align:center;
+    padding:15px 0 15px;
+  }
+
+  .login-form{ 
+    width:500px;
+    margin:20px;
+    background-color: $white;
+  }
+
+  .btn:hover {
+    background-color: blue;
+  }
+
+  /*support google chrome*/
+  .form-control::-webkit-input-placeholder {
+    color: black;
+  }
+
+  /*support mozilla*/
+  .form-control:-moz-input-placeholder {
+    color: black;
+  }
+
+  /*support internet explorer*/
+  .form-control:-ms-input-placeholder {
+    color: black;
+  }
+}
