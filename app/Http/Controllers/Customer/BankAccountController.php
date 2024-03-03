@@ -12,6 +12,7 @@ use App\Http\Requests\Customer\DepositRequest;
 use App\Http\Requests\Customer\TransferRequest;
 use App\Actions\Account\BankAccountAction;
 use App\Actions\Account\TransactionAction;
+use Illuminate\Support\Facades\DB;
 
 class BankAccountController extends Controller
 {
@@ -26,8 +27,14 @@ class BankAccountController extends Controller
       $user = Auth::user();
       $totalBalance = $user->balance + $request->amount;
 
-      BankAccountAction::updateBalance($user, $totalBalance);
-      TransactionAction::create($user, $request, $totalBalance, 'Credit', 'Deposit Money');
+      DB::beginTransaction();
+      try {
+        BankAccountAction::updateBalance($user, $totalBalance);
+        TransactionAction::create($user, $request, $totalBalance, 'Credit', 'Deposit Money');
+        DB::commit();
+      } catch (\Exception $e) {
+          DB::rollback();
+      }
 
       return response()->json([
           'message'=>'Amount added Successfully!!',
@@ -41,8 +48,14 @@ class BankAccountController extends Controller
       if ($user->balance >= $request->amount) {
         $totalBalance = $user->balance - $request->amount;
 
-        BankAccountAction::updateBalance($user, $totalBalance);
-        TransactionAction::create($user, $request, $totalBalance, 'Debit', 'Withdraw Money');
+        DB::beginTransaction();
+        try {
+          BankAccountAction::updateBalance($user, $totalBalance);
+          TransactionAction::create($user, $request, $totalBalance, 'Debit', 'Withdraw Money');
+          DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
 
         return response()->json([
             'message'=>'Amount withdraw Successfully!!',
@@ -80,9 +93,15 @@ class BankAccountController extends Controller
         $totalBalance = $user->balance - $request->amount;
         $receiverBalance = $receiver->balance + $request->amount;
 
-        BankAccountAction::updateBalance($user, $totalBalance);
-        BankAccountAction::updateBalance($receiver, $receiverBalance);
-        TransactionAction::create($user, $request, $totalBalance, 'Transfer', 'Transfer Money', $receiver);
+        DB::beginTransaction();
+        try {
+          BankAccountAction::updateBalance($user, $totalBalance);
+          BankAccountAction::updateBalance($receiver, $receiverBalance);
+          TransactionAction::create($user, $request, $totalBalance, 'Transfer', 'Transfer Money', $receiver);
+          DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
 
         return response()->json([
             'message'=>'Amount transfer Successfully!!',
