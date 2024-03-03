@@ -11,6 +11,9 @@
 - `npm run dev`
 - `php artisan serve`
 
+#####  Test Case Run #####
+- `./vendor/bin/phpunit tests/Feature/AuthTest.php`
+
 ###### Screens ######
 - Login Screen : `https://prnt.sc/FknhRWu0yieY`
 - Register Screen : `https://prnt.sc/sHqSdwgaEwwE`
